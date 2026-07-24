@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MediFlow • Doctor Dashboard</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+:root{
+--bg:#f0fdf4;
+--surface:#ffffff;
+--surface-2:#ecfdf5;
+--text:#064e3b;
+--text-dim:#065f46;
+--text-muted:#047857;
+--primary:#10b981;
+--primary-dark:#059669;
+--primary-light:#34d399;
+--border:#d1fae5;
+--shadow-sm:0 1px 3px rgba(0,0,0,0.05),0 1px 2px rgba(0,0,0,0.1);
+--shadow-md:0 4px 6px -1px rgba(0,0,0,0.1),0 2px 4px -1px rgba(0,0,0,0.06);
+--radius:12px;
+}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:'Inter',system-ui,-apple-system,sans-serif;
+background:var(--bg);
+color:var(--text);
+line-height:1.6;
+min-height:100vh;
+}
+
+/* NAVBAR */
+
+.navbar{
+background:white;
+border-bottom:1px solid var(--border);
+padding:1rem 5vw;
+display:flex;
+justify-content:space-between;
+align-items:center;
+box-shadow:var(--shadow-sm);
+}
+
+.logo{
+font-size:1.6rem;
+font-weight:700;
+color:var(--primary);
+}
+
+.logout{
+padding:0.5rem 1.2rem;
+border:1px solid var(--primary);
+border-radius:8px;
+color:var(--primary);
+text-decoration:none;
+font-weight:500;
+transition:.2s;
+}
+
+.logout:hover{
+background:var(--primary);
+color:white;
+}
+
+/* PAGE */
+
+.container{
+max-width:1000px;
+margin:40px auto;
+padding:0 5vw;
+animation:fadeUp .6s ease;
+}
+
+.welcome{
+font-size:1.7rem;
+font-weight:600;
+margin-bottom:20px;
+}
+
+.welcome span{
+color:var(--primary);
+font-weight:700;
+}
+
+/* CARD */
+
+.card{
+background:var(--surface);
+border:1px solid var(--border);
+border-radius:var(--radius);
+padding:22px;
+box-shadow:var(--shadow-sm);
+margin-bottom:20px;
+transition:.25s;
+}
+
+.card:hover{
+box-shadow:var(--shadow-md);
+}
+
+/* PROFILE */
+
+.profile-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:10px;
+font-size:.95rem;
+color:var(--text-dim);
+}
+
+.profile-row{
+display:flex;
+gap:6px;
+}
+
+.profile-row strong{
+color:var(--text);
+}
+
+/* QUEUE ITEM */
+
+.queue-item{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:16px;
+margin:10px 0;
+background:var(--surface-2);
+border-radius:var(--radius);
+border:1px solid var(--border);
+transition:.25s;
+}
+
+.queue-item:hover{
+transform:translateY(-2px);
+border-color:var(--primary-light);
+}
+
+/* STATUS */
+
+.status{
+font-weight:600;
+text-transform:capitalize;
+}
+
+.waiting{
+color:#f59e0b;
+}
+
+.serving{
+color:#10b981;
+}
+
+.completed{
+color:#64748b;
+}
+
+/* BUTTONS */
+
+.btn{
+padding:6px 14px;
+border-radius:8px;
+text-decoration:none;
+font-size:13px;
+font-weight:500;
+color:white;
+transition:.2s;
+}
+
+.start-btn{
+background:#10b981;
+}
+
+.start-btn:hover{
+background:#059669;
+}
+
+.end-btn{
+background:#ef4444;
+}
+
+.end-btn:hover{
+background:#dc2626;
+}
+
+/* EMPTY */
+
+.no-queue{
+text-align:center;
+padding:30px;
+color:var(--text-muted);
+font-style:italic;
+}
+
+/* ANIMATION */
+
+@keyframes fadeUp{
+from{
+opacity:0;
+transform:translateY(30px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+.queue-item{
+flex-direction:column;
+text-align:center;
+gap:10px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<header class="navbar">
+<div class="logo">MediFlow</div>
+<a href="/logout" class="logout">Logout</a>
+</header>
+
+
+<div class="container">
+
+<h1 class="welcome">Welcome Dr. <span>{{ user.full_name }}</span></h1>
+
+
+<div class="card">
+
+<div class="profile-grid">
+
+<div class="profile-row">
+<strong>Specialization:</strong>
+<span>{{ profile.specialization }}</span>
+</div>
+
+<div class="profile-row">
+<strong>Available Time:</strong>
+<span>{{ profile.available_time }}</span>
+</div>
+
+<div class="profile-row">
+<strong>Room Number:</strong>
+<span>{{ profile.room_number }}</span>
+</div>
+
+</div>
+
+</div>
+
+
+<h3>Today's Queue</h3>
+
+<div class="card">
+
+{% if queue_entries %}
+
+{% for entry in queue_entries %}
+
+<div class="queue-item">
+
+<div>
+
+<strong>Token #{{ entry.token_number }}</strong>
+<br>
+
+Status:
+<span class="status {{ entry.status }}">
+{{ entry.status }}
+</span>
+
+</div>
+
+
+<div>
+
+{% if entry.status == "waiting" %}
+
+<a href="/start_consultation/{{ entry.id }}" class="btn start-btn">
+Start
+</a>
+
+{% elif entry.status == "serving" %}
+
+<a href="/end_consultation/{{ entry.id }}" class="btn end-btn">
+End
+</a>
+
+{% endif %}
+
+</div>
+
+</div>
+
+{% endfor %}
+
+{% else %}
+
+<div class="no-queue">
+No patients in queue.
+</div>
+
+{% endif %}
+
+</div>
+
+</div>
+
+</body>
+</html>

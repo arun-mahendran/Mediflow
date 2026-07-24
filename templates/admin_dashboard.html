@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MediFlow Admin Dashboard</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: #0f172a;
+            color: white;
+            min-height: 100vh;
+        }
+
+        .header {
+            padding: 25px 60px;
+            background: #111827;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .header h2 {
+            color: #38bdf8;
+        }
+
+        .logout-btn {
+            text-decoration: none;
+            padding: 8px 18px;
+            border-radius: 30px;
+            border: 1px solid #38bdf8;
+            color: #38bdf8;
+            transition: 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #38bdf8;
+            color: #0f172a;
+        }
+
+        .container {
+            padding: 60px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background: #1e293b;
+            padding: 40px;
+            border-radius: 16px;
+            text-align: center;
+            transition: 0.3s;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            border-color: #38bdf8;
+            box-shadow: 0 0 20px rgba(56,189,248,0.3);
+        }
+
+        .card h3 {
+            font-size: 15px;
+            font-weight: 400;
+            color: #94a3b8;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        .card .number {
+            font-size: 42px;
+            font-weight: 600;
+            color: #38bdf8;
+        }
+
+        .footer {
+            margin-top: 80px;
+            text-align: center;
+            font-size: 13px;
+            color: #64748b;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h2>Admin Dashboard</h2>
+        <a href="/logout" class="logout-btn">Logout</a>
+    </div>
+
+    <div class="container">
+
+        <div class="stats-grid">
+
+            <div class="card">
+                <h3>Total Users</h3>
+                <div class="number">{{ total_users }}</div>
+            </div>
+
+            <div class="card">
+                <h3>Total Patients</h3>
+                <div class="number">{{ total_patients }}</div>
+            </div>
+
+            <div class="card">
+                <h3>Total Doctors</h3>
+                <div class="number">{{ total_doctors }}</div>
+            </div>
+
+        </div>
+
+        <div class="footer">
+            MediFlow • Smart Queue Intelligence System
+        </div>
+
+    </div>
+
+</body>
+</html>

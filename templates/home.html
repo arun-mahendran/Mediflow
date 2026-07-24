@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MediFlow • Smart Queue Intelligence</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+:root{
+--bg:#f0fdf4;
+--surface:#ffffff;
+--surface-2:#ecfdf5;
+--text:#064e3b;
+--text-dim:#065f46;
+--text-muted:#047857;
+--primary:#10b981;
+--primary-dark:#059669;
+--primary-light:#34d399;
+--border:#d1fae5;
+--shadow-sm:0 1px 3px rgba(0,0,0,0.05),0 1px 2px rgba(0,0,0,0.1);
+--shadow-md:0 4px 6px -1px rgba(0,0,0,0.1),0 2px 4px -1px rgba(0,0,0,0.06);
+--radius:12px;
+}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:'Inter',system-ui,-apple-system,sans-serif;
+background:var(--bg);
+color:var(--text);
+line-height:1.6;
+min-height:100vh;
+}
+
+/* NAVBAR */
+
+.navbar{
+background:white;
+border-bottom:1px solid var(--border);
+padding:1rem 5vw;
+display:flex;
+justify-content:space-between;
+align-items:center;
+position:sticky;
+top:0;
+z-index:50;
+box-shadow:var(--shadow-sm);
+}
+
+.logo{
+font-size:1.65rem;
+font-weight:700;
+color:var(--primary);
+letter-spacing:-0.4px;
+}
+
+.nav-links a{
+margin-left:12px;
+padding:0.5rem 1.25rem;
+border:1px solid var(--primary);
+border-radius:8px;
+color:var(--primary);
+text-decoration:none;
+font-weight:500;
+transition:.2s ease;
+}
+
+.nav-links a:hover{
+background:var(--primary);
+color:white;
+}
+
+/* HERO */
+
+.hero{
+max-width:900px;
+margin:70px auto 40px auto;
+padding:0 5vw;
+text-align:center;
+animation:fadeUp .8s ease;
+}
+
+.hero h1{
+font-size:2.6rem;
+font-weight:700;
+margin-bottom:16px;
+letter-spacing:-0.5px;
+}
+
+.hero p{
+color:var(--text-muted);
+font-size:1.05rem;
+max-width:650px;
+margin:auto;
+margin-bottom:30px;
+}
+
+/* CTA */
+
+.cta a{
+padding:.7rem 1.7rem;
+background:var(--primary);
+color:white;
+border-radius:8px;
+text-decoration:none;
+font-weight:500;
+transition:.2s ease;
+}
+
+.cta a:hover{
+background:var(--primary-dark);
+}
+
+/* FEATURES */
+
+.features{
+max-width:1100px;
+margin:50px auto;
+padding:0 5vw;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+gap:20px;
+}
+
+.feature-card{
+background:var(--surface);
+border:1px solid var(--border);
+border-radius:var(--radius);
+padding:22px;
+box-shadow:var(--shadow-sm);
+transition:.25s ease;
+}
+
+.feature-card:hover{
+box-shadow:var(--shadow-md);
+transform:translateY(-2px);
+}
+
+.feature-card h3{
+font-size:1.1rem;
+margin-bottom:8px;
+}
+
+.feature-card p{
+color:var(--text-muted);
+font-size:.95rem;
+}
+
+/* TAGLINE */
+
+.tagline{
+position:fixed;
+bottom:20px;
+left:0;
+right:0;
+text-align:center;
+color:var(--text-muted);
+font-size:.85rem;
+letter-spacing:1px;
+opacity:0.8;
+}
+
+/* ANIMATION */
+
+@keyframes fadeUp{
+from{
+opacity:0;
+transform:translateY(30px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+</style>
+</head>
+
+<body>
+
+<header class="navbar">
+<div class="logo">MediFlow</div>
+
+<div class="nav-links">
+<a href="/register">Register</a>
+<a href="/login">Login</a>
+</div>
+</header>
+
+
+<section class="hero">
+
+<h1>AI Smart Queue Optimization</h1>
+
+<p>
+Reduce hospital waiting uncertainty with real-time queue visibility,
+predictive consultation timing, and intelligent patient flow management.
+</p>
+
+<div class="cta">
+<a href="/register">Get Started</a>
+</div>
+
+</section>
+
+
+<section class="features">
+
+<div class="feature-card">
+<h3>Real-Time Queue Visibility</h3>
+<p>
+Patients can see their exact queue position and consultation progress live.
+</p>
+</div>
+
+<div class="feature-card">
+<h3>AI Waiting Time Prediction</h3>
+<p>
+Predict consultation time using real queue data and doctor consultation patterns.
+</p>
+</div>
+
+<div class="feature-card">
+<h3>Reduced Hospital Crowding</h3>
+<p>
+Patients arrive closer to their consultation time, reducing waiting room congestion.
+</p>
+</div>
+
+</section>
+
+<div class="tagline">
+MediFlow • Intelligent Hospital Queue Management
+</div>
+
+</body>
+</html>

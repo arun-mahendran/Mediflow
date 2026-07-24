@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MediFlow • Register</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+:root{
+--bg:#f0fdf4;
+--surface:#ffffff;
+--text:#064e3b;
+--text-muted:#047857;
+--primary:#10b981;
+--primary-dark:#059669;
+--border:#d1fae5;
+--radius:12px;
+}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:'Inter',sans-serif;
+background:var(--bg);
+min-height:100vh;
+display:flex;
+flex-direction:column;
+}
+
+/* NAVBAR */
+
+.navbar{
+background:white;
+border-bottom:1px solid var(--border);
+padding:1rem 5vw;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.logo{
+font-size:1.6rem;
+font-weight:700;
+color:var(--primary);
+}
+
+.nav-links a{
+margin-left:12px;
+padding:0.5rem 1.2rem;
+border:1px solid var(--primary);
+border-radius:8px;
+color:var(--primary);
+text-decoration:none;
+font-weight:500;
+}
+
+.nav-links a:hover{
+background:var(--primary);
+color:white;
+}
+
+/* REGISTER SECTION */
+
+.register-wrapper{
+flex:1;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:40px 20px;
+}
+
+.card{
+background:white;
+border:1px solid var(--border);
+border-radius:var(--radius);
+padding:40px;
+width:520px;
+}
+
+h2{
+text-align:center;
+margin-bottom:25px;
+}
+
+input,select{
+width:100%;
+padding:12px;
+margin-bottom:14px;
+border-radius:8px;
+border:1px solid var(--border);
+font-size:14px;
+}
+
+input:focus,select:focus{
+outline:none;
+border-color:var(--primary);
+}
+
+/* PASSWORD FIELD */
+
+.password-wrapper{
+position:relative;
+}
+
+.password-wrapper input{
+padding-right:40px;
+}
+
+.eye-btn{
+position:absolute;
+right:12px;
+top:50%;
+transform:translateY(-50%);
+cursor:pointer;
+color:#555;
+}
+
+/* PASSWORD HINT */
+
+.password-hint{
+display:none;
+font-size:12px;
+color:#dc2626;
+margin-top:-8px;
+margin-bottom:14px;
+}
+
+/* BUTTON */
+
+button{
+width:100%;
+padding:12px;
+background:var(--primary);
+color:white;
+border:none;
+border-radius:8px;
+font-size:15px;
+cursor:pointer;
+}
+
+button:hover{
+background:var(--primary-dark);
+}
+
+/* ROLE SECTIONS */
+
+.hidden{
+display:none;
+}
+
+/* CHECKBOX */
+
+.checkbox{
+display:flex;
+align-items:center;
+margin-bottom:18px;
+font-size:13px;
+color:var(--text-muted);
+}
+
+.checkbox input{
+width:auto;
+margin-right:8px;
+}
+
+/* TAGLINE */
+
+.tagline{
+text-align:center;
+margin-bottom:20px;
+color:var(--text-muted);
+font-size:.9rem;
+}
+
+</style>
+
+<script>
+
+/* ROLE TOGGLE */
+
+function toggleRole(){
+
+let role=document.getElementById("role").value
+
+let patientFields=document.getElementById("patientFields")
+let doctorFields=document.getElementById("doctorFields")
+
+patientFields.style.display="none"
+doctorFields.style.display="none"
+
+if(role==="patient"){
+patientFields.style.display="block"
+}
+
+if(role==="doctor"){
+doctorFields.style.display="block"
+}
+
+}
+
+/* PASSWORD LENGTH CHECK */
+
+function checkPassword(){
+
+let password=document.getElementById("password").value
+let hint=document.getElementById("passwordHint")
+
+if(password.length===0){
+hint.style.display="none"
+}
+else if(password.length<8){
+hint.style.display="block"
+}
+else{
+hint.style.display="none"
+}
+
+}
+
+/* PASSWORD TOGGLE */
+
+function togglePassword(id, element){
+
+let input=document.getElementById(id)
+
+if(input.type==="password"){
+
+input.type="text"
+
+element.innerHTML=`
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M17.94 17.94A10.94 10.94 0 0112 20C5 20 1 12 1 12"/>
+<path d="M1 1l22 22"/>
+</svg>
+`
+
+}
+else{
+
+input.type="password"
+
+element.innerHTML=`
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M1 12s4-8 11-8 11 8 11 8"/>
+<circle cx="12" cy="12" r="3"/>
+</svg>
+`
+
+}
+
+}
+
+</script>
+
+</head>
+
+<body>
+
+<header class="navbar">
+
+<div class="logo">MediFlow</div>
+
+<div class="nav-links">
+<a href="/register">Register</a>
+<a href="/login">Login</a>
+</div>
+
+</header>
+
+
+<div class="register-wrapper">
+
+<div class="card">
+
+<h2>Create Account</h2>
+
+<form method="POST" action="/register">
+
+<input type="text" name="full_name" placeholder="Full Name" required>
+
+<input type="text" name="username" placeholder="Username" required>
+
+<input type="email" name="email" placeholder="Email (Optional)">
+
+<input type="text" name="mobile" placeholder="Mobile Number" required>
+
+
+<div class="password-wrapper">
+
+<input
+type="password"
+id="password"
+name="password"
+placeholder="Password"
+minlength="8"
+required
+oninput="checkPassword()">
+
+<span class="eye-btn" onclick="togglePassword('password',this)">
+
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M1 12s4-8 11-8 11 8 11 8"/>
+<circle cx="12" cy="12" r="3"/>
+</svg>
+
+</span>
+
+</div>
+
+<div id="passwordHint" class="password-hint">
+Password must contain minimum 8 characters
+</div>
+
+
+<div class="password-wrapper">
+
+<input
+type="password"
+id="confirm_password"
+name="confirm_password"
+placeholder="Confirm Password"
+minlength="8"
+required>
+
+<span class="eye-btn" onclick="togglePassword('confirm_password',this)">
+
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M1 12s4-8 11-8 11 8 11 8"/>
+<circle cx="12" cy="12" r="3"/>
+</svg>
+
+</span>
+
+</div>
+
+
+<select name="role" id="role" onchange="toggleRole()" required>
+
+<option value="">Select Role</option>
+<option value="patient">Patient</option>
+<option value="doctor">Doctor</option>
+
+</select>
+
+
+<div id="patientFields" class="hidden">
+
+<input type="number" name="age" placeholder="Age">
+
+<select name="gender">
+<option value="">Gender</option>
+<option>Male</option>
+<option>Female</option>
+<option>Other</option>
+</select>
+
+<input type="text" name="emergency_contact" placeholder="Emergency Contact (Optional)">
+
+</div>
+
+
+<div id="doctorFields" class="hidden">
+
+<input type="text" name="specialization" placeholder="Specialization">
+
+<input type="text" name="available_time" placeholder="Available Time">
+
+<input type="text" name="room_number" placeholder="Room Number">
+
+</div>
+
+
+<div class="checkbox">
+<input type="checkbox" required>
+I agree to Terms & Conditions
+</div>
+
+
+<button type="submit">Register</button>
+
+</form>
+
+</div>
+
+</div>
+
+
+<div class="tagline">
+MediFlow • Intelligent Hospital Queue Management
+</div>
+
+</body>
+</html>
