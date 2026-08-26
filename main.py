@@ -197,7 +197,7 @@ def patient_dashboard():
     queue_waiting_count = QueueEntry.query.filter_by(status="waiting").count()
 
     return render_template(
-        "patient_dashboard.html",
+        "patient_dashboard/dashboard.html",
         active_page="dashboard",
         user=user,
         profile=profile,
@@ -221,7 +221,7 @@ def consultation_page():
     serving_entries = _get_serving_entries(user.id)
 
     return render_template(
-        "consultation.html",
+        "patient_dashboard/consultation.html",
         active_page="consultation",
         user=user,
         profile=profile,
@@ -243,7 +243,7 @@ def upcoming_page():
     upcoming_entries = _get_upcoming_entries(user.id)
 
     return render_template(
-        "upcoming.html",
+        "patient_dashboard/upcoming.html",
         active_page="upcoming",
         user=user,
         profile=profile,
@@ -265,7 +265,7 @@ def doctors_page():
     doctors = DoctorProfile.query.all()
 
     return render_template(
-        "doctors.html",
+        "patient_dashboard/doctors.html",
         active_page="doctors",
         user=user,
         profile=profile,
@@ -287,7 +287,7 @@ def history_page():
     history_entries = _get_history_entries(user.id)
 
     return render_template(
-        "history.html",
+        "patient_dashboard/history.html",
         active_page="history",
         user=user,
         profile=profile,
@@ -307,7 +307,7 @@ def profile_page():
     user, profile = result
 
     return render_template(
-        "profile.html",
+        "patient_dashboard/profile.html",
         active_page="profile",
         user=user,
         profile=profile
