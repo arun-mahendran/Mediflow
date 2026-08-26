@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Doctors{% endblock %}
+
+{% block content %}
+
+  <div class="hero-row">
+    <div>
+      <span class="hero-eyebrow">Book a Visit</span>
+      <h1 class="welcome">Available <span>Doctors</span></h1>
+      <p class="hero-sub">Pick a doctor to get an instant token.</p>
+    </div>
+  </div>
+
+  <div class="full-col">
+    <div class="card standalone">
+      <div class="card-head">
+        <h2>Available Doctors</h2>
+        <span class="pill">{{ doctors|length }} Available</span>
+      </div>
+
+      {% if doctors %}
+        {% for doctor in doctors %}
+        <div class="doctor-item">
+          <div class="doctor-left">
+            <div class="doc-avatar">{{ doctor.user.full_name[0]|upper }}</div>
+            <div class="doctor-info">
+              <h4>Dr. {{ doctor.user.full_name }}</h4>
+              <div class="doctor-meta">
+                <span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 2v6l-4 4v8a2 2 0 002 2h10a2 2 0 002-2v-8l-4-4V2M9 2h6"/></svg>
+                  {{ doctor.specialization }}
+                </span>
+                <span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+                  {{ doctor.available_time }}
+                </span>
+                <span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21V7l9-4 9 4v14M9 21v-6h6v6"/></svg>
+                  Room {{ doctor.room_number }}
+                </span>
+              </div>
+            </div>
+          </div>
+          <a href="{{ url_for('book_consultation', doctor_id=doctor.id) }}" class="btn">Book Now</a>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="empty-state">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+          <p>No doctors available at the moment</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+{% endblock %}

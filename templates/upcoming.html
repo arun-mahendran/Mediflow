@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Upcoming{% endblock %}
+{% block refresh %}<meta http-equiv="refresh" content="15">{% endblock %}
+
+{% block content %}
+
+  <div class="hero-row">
+    <div>
+      <span class="hero-eyebrow">Booked Ahead</span>
+      <h1 class="welcome">Upcoming <span>Consultations</span></h1>
+      <p class="hero-sub">Tokens you've booked that are still in the queue.</p>
+    </div>
+  </div>
+
+  <div class="full-col">
+    <div class="card standalone">
+      <div class="card-head">
+        <h2>Upcoming Consultations</h2>
+        {% if upcoming_entries %}<span class="pill">{{ upcoming_entries|length }} Booked</span>{% endif %}
+      </div>
+
+      {% if upcoming_entries %}
+        {% for entry in upcoming_entries %}
+        <div class="consult-row">
+          <div class="token-board upcoming">
+            <span class="t-label">Your Token</span>
+            <span class="t-value">{{ entry.token_number }}</span>
+          </div>
+          <div class="consult-info">
+            <h3>Dr. {{ entry.doctor.user.full_name }}</h3>
+            <p>{{ entry.doctor.specialization }} · {{ entry.scheduled_date }} at {{ entry.scheduled_time }}</p>
+            <div class="consult-actions">
+              <span class="badge-progress queued">Queued</span>
+              <a href="{{ url_for('cancel_consultation', entry_id=entry.id) }}" class="btn-cancel" onclick="return confirm('Cancel this booking with Dr. {{ entry.doctor.user.full_name }}?');">Cancel booking</a>
+            </div>
+            {% if entry.patients_ahead is defined %}
+            <div class="queue-position"><b>{{ entry.patients_ahead }}</b> patient{{ 's' if entry.patients_ahead != 1 else '' }} ahead of you</div>
+            {% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="empty-state">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>
+          <p>No upcoming consultations booked</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+{% endblock %}

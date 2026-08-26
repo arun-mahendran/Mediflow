@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Consultation{% endblock %}
+{% block refresh %}<meta http-equiv="refresh" content="15">{% endblock %}
+
+{% block content %}
+
+  <div class="hero-row">
+    <div>
+      <span class="hero-eyebrow">Live Status</span>
+      <h1 class="welcome">Your <span>Current Consultation</span></h1>
+      <p class="hero-sub">Real-time status of your active token.</p>
+    </div>
+  </div>
+
+  <div class="full-col">
+    <div class="card standalone">
+      <div class="card-head">
+        <h2>Your Current Consultation</h2>
+        {% if serving_entries %}<span class="pill live">Live</span>{% endif %}
+      </div>
+
+      {% if serving_entries %}
+        {% for entry in serving_entries %}
+        <div class="consult-row">
+          <div class="token-board">
+            <span class="t-label">Now Serving</span>
+            <span class="t-value">{{ entry.token_number }}</span>
+          </div>
+          <div class="consult-info">
+            <h3>Dr. {{ entry.doctor.user.full_name }}</h3>
+            <p>You're currently being attended to.</p>
+            <span class="badge-progress">In Progress</span>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="empty-state">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+          <p>No active consultation right now</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+{% endblock %}

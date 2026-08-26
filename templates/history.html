@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}History{% endblock %}
+
+{% block content %}
+
+  <div class="hero-row">
+    <div>
+      <span class="hero-eyebrow">Past Visits</span>
+      <h1 class="welcome">Consultation <span>History</span></h1>
+      <p class="hero-sub">A record of your completed and cancelled visits.</p>
+    </div>
+  </div>
+
+  <div class="full-col">
+    <div class="card standalone">
+      <div class="card-head">
+        <h2>Consultation History</h2>
+        {% if history_entries %}<span class="pill">{{ history_entries|length }} Past Visits</span>{% endif %}
+      </div>
+
+      {% if history_entries %}
+      <div class="history-scroll">
+        <div class="history-list">
+          {% for entry in history_entries %}
+          <div class="history-row">
+            <div class="history-left">
+              <div class="history-token">#{{ entry.token_number }}</div>
+              <div class="history-info">
+                <h4>Dr. {{ entry.doctor.user.full_name }}</h4>
+                <div class="history-meta">
+                  <span>{{ entry.doctor.specialization }}</span>
+                  <span>{{ entry.date }}</span>
+                </div>
+              </div>
+            </div>
+            <span class="status-pill {{ entry.status|lower|replace(' ', '_') }}">{{ entry.status }}</span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% else %}
+        <div class="empty-state">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 12a9 9 0 109-9 9.75 9.75 0 00-6.7 2.7L3 8"/><path d="M3 3v5h5M12 7v5l3 3"/></svg>
+          <p>No past consultations yet</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+{% endblock %}

@@ -125,34 +125,193 @@ def login():
 
 
 # ===============================
-# PATIENT DASHBOARD
+# SHARED HELPERS (used by every patient page so the
+# navbar / stats stay consistent no matter which page loads)
 # ===============================
+def _require_patient():
+    """Returns (user, profile) or None if not logged in as a patient."""
+    if session.get("role") != "patient":
+        return None
+    user_id = session.get("user_id")
+    user = User.query.get(user_id)
+    profile = PatientProfile.query.filter_by(user_id=user_id).first()
+    return user, profile
+
+
+def _get_serving_entries(user_id):
+    return QueueEntry.query.filter_by(
+        patient_id=user_id,
+        status="serving"
+    ).all()
+
+
+def _get_upcoming_entries(user_id):
+    upcoming_entries = QueueEntry.query.filter_by(
+        patient_id=user_id,
+        status="waiting"
+    ).order_by(QueueEntry.checkin_time.asc()).all()
+
+    for entry in upcoming_entries:
+        entry.patients_ahead = QueueEntry.query.filter(
+            QueueEntry.doctor_id == entry.doctor_id,
+            QueueEntry.status == "waiting",
+            QueueEntry.token_number < entry.token_number
+        ).count()
+        entry.scheduled_date = entry.checkin_time.strftime("%d %b %Y")
+        entry.scheduled_time = entry.checkin_time.strftime("%I:%M %p")
+
+    return upcoming_entries
+
+
+def _get_history_entries(user_id):
+    history_entries = QueueEntry.query.filter(
+        QueueEntry.patient_id == user_id,
+        QueueEntry.status.in_(["completed", "cancelled"])
+    ).order_by(QueueEntry.checkin_time.desc()).all()
+
+    for entry in history_entries:
+        entry.date = entry.checkin_time.strftime("%d %b %Y")
+        entry.status = entry.status.title()
+
+    return history_entries
+
+
 # ===============================
-# PATIENT DASHBOARD
+# PATIENT DASHBOARD (overview page)
 # ===============================
 @app.route("/patient_dashboard")
 def patient_dashboard():
 
-    if session.get("role") != "patient":
+    result = _require_patient()
+    if not result:
         return redirect(url_for("login"))
-
-    user_id = session.get("user_id")
-    user = User.query.get(user_id)
-    profile = PatientProfile.query.filter_by(user_id=user_id).first()
+    user, profile = result
+    user_id = user.id
 
     doctors = DoctorProfile.query.all()
+    serving_entries = _get_serving_entries(user_id)
 
-    # Get currently serving tokens (for all doctors)
-    serving_entries = QueueEntry.query.filter_by(status="serving").all()
+    # Clinic-wide live count: everyone currently waiting, across all doctors.
+    # Meta refresh (15s) on the template re-hits this route, so the number
+    # updates continuously without any JS polling needed.
+    queue_waiting_count = QueueEntry.query.filter_by(status="waiting").count()
 
     return render_template(
         "patient_dashboard.html",
+        active_page="dashboard",
         user=user,
         profile=profile,
         doctors=doctors,
+        serving_entries=serving_entries,
+        queue_waiting_count=queue_waiting_count
+    )
+
+
+# ===============================
+# CONSULTATION PAGE
+# ===============================
+@app.route("/consultation")
+def consultation_page():
+
+    result = _require_patient()
+    if not result:
+        return redirect(url_for("login"))
+    user, profile = result
+
+    serving_entries = _get_serving_entries(user.id)
+
+    return render_template(
+        "consultation.html",
+        active_page="consultation",
+        user=user,
+        profile=profile,
         serving_entries=serving_entries
     )
 
+
+# ===============================
+# UPCOMING PAGE
+# ===============================
+@app.route("/upcoming")
+def upcoming_page():
+
+    result = _require_patient()
+    if not result:
+        return redirect(url_for("login"))
+    user, profile = result
+
+    upcoming_entries = _get_upcoming_entries(user.id)
+
+    return render_template(
+        "upcoming.html",
+        active_page="upcoming",
+        user=user,
+        profile=profile,
+        upcoming_entries=upcoming_entries
+    )
+
+
+# ===============================
+# DOCTORS PAGE
+# ===============================
+@app.route("/doctors")
+def doctors_page():
+
+    result = _require_patient()
+    if not result:
+        return redirect(url_for("login"))
+    user, profile = result
+
+    doctors = DoctorProfile.query.all()
+
+    return render_template(
+        "doctors.html",
+        active_page="doctors",
+        user=user,
+        profile=profile,
+        doctors=doctors
+    )
+
+
+# ===============================
+# HISTORY PAGE
+# ===============================
+@app.route("/history")
+def history_page():
+
+    result = _require_patient()
+    if not result:
+        return redirect(url_for("login"))
+    user, profile = result
+
+    history_entries = _get_history_entries(user.id)
+
+    return render_template(
+        "history.html",
+        active_page="history",
+        user=user,
+        profile=profile,
+        history_entries=history_entries
+    )
+
+
+# ===============================
+# PROFILE PAGE
+# ===============================
+@app.route("/profile")
+def profile_page():
+
+    result = _require_patient()
+    if not result:
+        return redirect(url_for("login"))
+    user, profile = result
+
+    return render_template(
+        "profile.html",
+        active_page="profile",
+        user=user,
+        profile=profile
+    )
 
 
 # ===============================
@@ -182,6 +341,29 @@ def book_consultation(doctor_id):
     db.session.commit()
 
     return redirect(url_for("view_queue_status", entry_id=entry.id))
+
+
+# ===============================
+# CANCEL CONSULTATION
+# ===============================
+@app.route("/cancel_consultation/<int:entry_id>")
+def cancel_consultation(entry_id):
+
+    if session.get("role") != "patient":
+        return redirect(url_for("login"))
+
+    user_id = session.get("user_id")
+    entry = QueueEntry.query.get_or_404(entry_id)
+
+    # only the owning patient can cancel, and only while still waiting
+    # (can't cancel one that's already being served or finished)
+    if entry.patient_id != user_id or entry.status != "waiting":
+        return redirect(url_for("patient_dashboard"))
+
+    entry.status = "cancelled"
+    db.session.commit()
+
+    return redirect(url_for("upcoming_page"))
 
 
 # ===============================
